@@ -32,8 +32,8 @@ private func basicAsyncTask() async -> String {
 }
 
 ```
+<img width="710" alt="스크린샷 2024-11-16 오후 3 22 10" src="https://github.com/user-attachments/assets/3a57d108-70f3-4a64-9b36-e6447b3eebfa">
 
-![스크린샷 2024-11-15 오전 9.22.33.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/8feb0654-77ca-44e0-b7cf-54be4520a1d0/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_9.22.33.png)
 ```swift
 @objc private func task1ButtonTapped() {
     Task {
@@ -69,9 +69,7 @@ private func basicAsyncTask() async -> String {
     - Creating에서 과정 중간 쯤 새로운 스레드를 만듦 `0x28233a7d`
     - Running → Blocked 를 반복하다가  3. Suspended -> Running (basicAsyncTask 실행)에서 동작 안하다가 Continuation 중간쯤 다시 활성화가 된다.
     - 3번 과정에서부터 ContextSwitches 비용이 많이 발생
-        
-        ![스크린샷 2024-11-15 오전 10.01.00.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/c60ea36d-4ef5-4db0-982c-0fd9f0d1aff0/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.01.00.png)
-        
+        <img width="655" alt="스크린샷 2024-11-16 오후 3 22 53" src="https://github.com/user-attachments/assets/44092a20-5e25-4416-b12b-a741a8df162a">        
 - 작업이 끝나면 Context Switches 그대로
 
 ## 2. Task.detached 코드
@@ -94,8 +92,8 @@ private func basicAsyncTask() async -> String {
         return result
     }
 ```
+<img width="707" alt="스크린샷 2024-11-16 오후 3 23 27" src="https://github.com/user-attachments/assets/cc1effb5-dae8-4dec-a730-83c6fb8fb737">
 
-![스크린샷 2024-11-15 오전 10.06.13.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/696c15e3-787c-4e4c-bb7d-2849c548d581/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.06.13.png)
 
 - Continuation과 달리 Waiting이 새로 생겼는데 Task.detached는 새로운 Task를 생성하고 그 결과값 (.value)를 기다려야 하므로 Waiting 상태가 필요하다.
 - Runinng 중간에 Creating이 생성된다.
@@ -128,23 +126,21 @@ private func basicAsyncTask() async -> String {
         return String(sum)
     }
 ```
+<img width="709" alt="스크린샷 2024-11-16 오후 3 24 05" src="https://github.com/user-attachments/assets/8021d353-5481-4d59-9c4e-e1faf870de76">
+<img width="706" alt="스크린샷 2024-11-16 오후 3 24 28" src="https://github.com/user-attachments/assets/905b9b3d-f538-4a58-916b-d0125b53602a">
 
-![스크린샷 2024-11-15 오전 10.27.45.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/470a3995-27da-43b9-be7b-53bbbc273bc9/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.27.45.png)
-
-![스크린샷 2024-11-15 오전 10.26.51.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/e25a9acb-b08b-4ac8-aae0-0e059d1cde89/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.26.51.png)
 
 - 메인스레드, 2번 스레드, 8번 스레드 총 3개의 스레드가 동작
     - Creating이 총 세번 되는데 task1ButtonTapped내 Task, basicAsyncTask 내 Task.detached, Task.sleep()
 - Continuation이 생성되는 이유
     - Task.sleep() 내부 코드를 살펴보면 내부에서 `try await withUnsafeThrowingContinuation` 호출을 통해 continuation이 동작하는게 보이는데 위 사진의 Continuation 같긴함
-
-![스크린샷 2024-11-14 오후 6.54.32.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/97c8504f-5c15-406e-bb2d-110581367dd3/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-14_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_6.54.32.png)
+    <img width="636" alt="스크린샷 2024-11-16 오후 3 26 32" src="https://github.com/user-attachments/assets/4be6315c-50d7-4f11-88a1-30bbfc9ee1b2">
 
 - Continuation 동작과 동시에 Creating이 1초 같이 동작
     - 무엇이 Creating 되는거지?
         - basicAsyncTask 내 Task.sleep()이 Creating 되는 것 같음
-            
-            ![스크린샷 2024-11-15 오전 10.47.12.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/2490fc0b-cc85-4e5f-83ac-99dad30ef232/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.47.12.png)
+    <img width="412" alt="스크린샷 2024-11-16 오후 3 26 44" src="https://github.com/user-attachments/assets/e76e5853-7044-42a0-982c-4c8f4c3a7b13">
+
             
 - 스레드에서 Preempted 으로 동작 (노란색)
     - preemption(선점)이란, 어느 thread가 수행 중인데, 느닷없이 그 thread가 동작을 멈추고 다른 thread가 수행되는 것을 말한다.
@@ -156,10 +152,7 @@ private func basicAsyncTask() async -> String {
         4. Preempting Scheduling을 통해서 각 작업에 대해 얼만큼 수행할 지 또는 어떤 작업을 먼저 수행할 지 결정 그에 맞게 동시성 보장
         - 이게 맞나?
         - 근데 이때 ContextSwitching 비중이 높긴함
-        
-        ![스크린샷 2024-11-15 오전 10.53.58.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/79c195c0-8576-445c-8421-40aef05be261/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.53.58.png)
-        
-    
+        <img width="591" alt="스크린샷 2024-11-16 오후 3 27 03" src="https://github.com/user-attachments/assets/a096e534-1e03-467b-9738-ab49d0af904e">
 
 ## 4. Task.sleep()
 
@@ -187,14 +180,8 @@ private func basicAsyncTask() async -> String {
     }
 ```
 
-- 예상되는 결과값을 먼저 생각해보자
-    - 
-
-![스크린샷 2024-11-15 오전 11.07.21.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/758fdc2f-6f1b-4c92-a9c3-b109ff56bfb2/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.07.21.png)
-
-![스크린샷 2024-11-15 오전 11.07.46.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/a141735e-bbcd-4859-84ee-c966f20680d8/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.07.46.png)
-
-- 벌써 끔찍하다
+<img width="636" alt="스크린샷 2024-11-16 오후 3 27 28" src="https://github.com/user-attachments/assets/12c74bf6-dc45-4ffa-8ecd-803bcca2c5be">
+<img width="639" alt="스크린샷 2024-11-16 오후 3 27 43" src="https://github.com/user-attachments/assets/145c3d6b-8612-4ff6-9dfd-9f15e3adfaeb">
 
 ## 5. 반복문 안에 Task.sleep()
 
@@ -221,7 +208,5 @@ private func basicAsyncTask() async -> String {
         return String(result)
     }
 ```
+<img width="638" alt="스크린샷 2024-11-16 오후 3 28 00" src="https://github.com/user-attachments/assets/34381f86-957e-4930-9659-08e73425179b">
 
-![스크린샷 2024-11-15 오후 12.56.59.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/632b0f22-8c43-40b9-8beb-d8ca67513fc8/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_12.56.59.png)
-
-![스크린샷 2024-11-15 오후 12.57.28.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/995d9ee3-0dee-48df-b4d6-d85ab76469d2/a472b62d-a6b7-42c7-ac52-56440f465079/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-15_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_12.57.28.png)[bbd6a743-7079-4753-8879-e33117ddf5db_섹션8._swift_concurrency_방식으로의_전환.pdf](https://github.com/user-attachments/files/17767944/bbd6a743-7079-4753-8879-e33117ddf5db_.8._swift_concurrency_._.pdf)
