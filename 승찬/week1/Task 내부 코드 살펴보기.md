@@ -1,10 +1,3 @@
-1. 왜 GCD -> Task로 넘어간 것일까?
-2. 메타데이터가 무엇일까?
-3. Task는 왜 struct로 구현되어 있을까?
-4. Task struct에 @frozen이 사용된 이유?
-5. 아래 코드에서 taskA를 취소하면 taskB도 취소가 되는데 Task가 참조처럼 동작하는 이유가 무엇일까?
-6. Builtin.NativeObject
-
 ```swift
  let taskA = Task {
         print("Task A 시작")
@@ -30,7 +23,7 @@
 ```
 <img width="782" alt="스크린샷 2024-11-07 오후 7 42 48" src="https://github.com/user-attachments/assets/817fb960-0ed6-4666-91e0-426c9bb2379c">
 
-- taskA.cancel() -> taskB도 cancel
+- taskA.cancel() 시, taskB도 cancel된다.
 
 ```swift
 @available(SwiftStdlib 5.1, *)
@@ -63,7 +56,7 @@ public struct Task<Success: Sendable, Failure: Error>: Sendable {
 - 내부 속성으로, Swift 런타임이 작업을 추적하는 데 사용하는 기본 객체
 - 이 속성은 Task의 실제 작업을 나타내는 핵심 데이터
 
-### 왜 Task는 구조체로 구현이 되어있을까?:
+### 왜 Task는 구조체로 구현이 되어있을까?
 - Task 자체는 태스크에 대한 메타데이터와 핸들을 제공하는 객체이다.
 - 필요할 때 값 타입으로 빠르게 복사할 수 있어 메모리 관리와 성능 최적화에 유리
 
@@ -91,10 +84,10 @@ public struct Task<Success: Sendable, Failure: Error>: Sendable {
 
 ### 그럼 어떻게 동작을 하는지?
 1. Task가 시작되면, 해당 작업이 비동기적으로 실행된다.
-2. 생성된 Task를 참조하지 않더라도 해당 작업은 계속 진행됩니다. 하지만 참조를 놓치게 되면, 그 작업의 결과를 기다리거나 취소할 수 있는 권한을 잃게 된다.
+2. 생성된 Task를 참조하지 않더라도 해당 작업은 계속 진행된다. 하지만 참조를 놓치게 되면, 그 작업의 결과를 기다리거나 취소할 수 있는 권한을 잃게 된다.
 3.  한 Task 인스턴스를 취소하면 그 Task의 다른 복사본에도 영향을 미친다.
 
-- 구조체보다는 클래스처럼 동작하는데 `Builtin.NativeObject` 을 통해서 동작한다.
+- 구조체보다는 클래스처럼 동작하는데 그 이유는 `Builtin.NativeObject` 을 통해서 동작하기 때문이다.
 
 ```swift
 public var result: Result<Success, Failure> {
@@ -122,4 +115,3 @@ public func cancel() {
 public func _taskFutureGetThrowing<T>(_ task: Builtin.NativeObject) async throws -> T
 ```
 
-https://forums.swift.org/t/why-is-task-a-struct-when-it-acts-so-much-more-like-a-reference-type/61970/22
