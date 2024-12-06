@@ -101,8 +101,7 @@ queue.addOperations([operation1, operation2], waitUntilFinished: true)
 → `isCancelled`를 통해 작업 취소를 관리한다.
 
 - 기존 GCD 작업을 Operation으로 래핑 후 취소 상태를 부여할 수 있다.
-
-![스크린샷 2024-12-06 12.56.05.png](12%E1%84%8B%E1%85%AF%E1%86%AF%206%E1%84%8B%E1%85%B5%E1%86%AF%20(%E1%84%80%E1%85%B3%E1%86%B7)%2015439168096380e9a999c3607912d5f7/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-12-06_12.56.05.png)
+<img width="399" alt="%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-12-06_12 56 05" src="https://github.com/user-attachments/assets/4e28fa89-9c5c-4a47-9f13-e6d7d7d5d672">
 
 ### e.g.) Custom Operation을 사용해 Cancel 시 전처리 작업 가능
 
